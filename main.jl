@@ -14,22 +14,18 @@ function method()
         println("[$i] $option")
     end
 
-    while true
-        println("Enter your choice (1 or 2): ")
-        input = readline()
-        choice = parse(Int, input)
+    println("Enter your choice (1 or 2): ")
+    choice = readline()
 
-        if choice in 1:length(options)
-            if choice == 1
-                three_dsix()
-            elseif choice == 2
-                four_dsix_drop()
-            end
-            break
-        else
+        while choice ∉ ["1", "2"]
             println("Invalid choice. Please enter a valid option number.")
+            choice = readline()
         end
-    end
+        if choice == "1"
+            three_dsix()
+        elseif choice == "2"
+            four_dsix_drop()
+        end
 end
 
 method()
