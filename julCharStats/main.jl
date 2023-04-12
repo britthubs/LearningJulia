@@ -1,31 +1,66 @@
-# method list + input method
-function three_dsix()
-    println("To be continued")
+# import
+import REPL
+using REPL.TerminalMenus
+
+# set up empty array and string (end summary)
+names = []
+stats_tot = []
+
+function nameAndClear()
+    println("What's your character's name?: ")
+    charac = readline()
+    push!(names, charac)  # add the name of the character to the list
+    stats = []  # make sure the list is empty again before adding stats
+    return charac, stats
 end
 
-function four_dsix_drop()
-    println("To be continued")
+function method()  # method list + input method
+    options = ["roll 3d6 and add them", "roll 3d6 and add (3 times), pick the highest","roll 4d6, drop lowest number and add them"]
+    menu = RadioMenu(options; charset=:ascii)
+    choice = request("METHOD MENU:", menu)
+    choice == 1 ? three_dsix() : (choice == 2 ? three_dsix_drop() : four_dsix_drop())  # call the respective function
 end
 
-function method()
-    options = ["roll 3d6 and add them", "roll 4d6, drop lowest number and add them"]
-    printstyled("METHOD MENU:\n"; color= :magenta)
-    for (i, option) in enumerate(options)
-        println("[$i] $option")
+
+function three_dsix()  # 3d6 per stat
+    charac, stats = nameAndClear()
+    for i in UnitRange(1,6)
+        stat = rand(1:6) + rand(1:6) + rand(1:6)
+        push!(stats, stat)  # add the stat to a list for this character's stats
     end
-
-    println("Enter your choice (1 or 2): ")
-    choice = readline()
-
-        while choice ∉ ["1", "2"]
-            println("Invalid choice. Please enter a valid option number.")
-            choice = readline()
-        end
-        if choice == "1"
-            three_dsix()
-        elseif choice == "2"
-            four_dsix_drop()
-        end
+    push!(stats_tot, stats)  # put the list of the stats for this character in a list for the summary at the end
+    printstyled("Stats completed!\n"; color= :magenta)
 end
 
+function three_dsix_drop()  # 3 times 3d6, pick highest
+    charac, stats = nameAndClear()
+    for i in UnitRange(1,6)
+        stat = max(rand(1:6) + rand(1:6) + rand(1:6),
+                rand(1:6) + rand(1:6) + rand(1:6),
+                rand(1:6) + rand(1:6) + rand(1:6))  # take the highest number from the array containing 3 times 3d6 for one stat
+        push!(stats, stat)  # add the stat to a list for this character's stats
+    end
+    push!(stats_tot, stats)  # put the list of the stats for this character in a list for the summary at the end
+    printstyled("Stats completed!\n"; color= :magenta)
+end
+
+function four_dsix_drop()  # 4d6 drop the lowest
+    charac, stats = nameAndClear()
+    for i in UnitRange(1,6)
+        dice = [rand(1:6), rand(1:6), rand(1:6), rand(1:6)]  # 4d6 in an array
+        minVal = minimum(dice)
+        index_to_delete = findfirst(x -> x == minVal, dice)
+        index_to_delete !== nothing && deleteat!(dice, index_to_delete)  # remove the lowest value from the array
+        stat = 0
+        for number in dice
+            stat += number  # add all the remaining numbers from the list
+        end
+        push!(stats, stat)  # add the stat to a list for this character's stats
+    end
+    push!(stats_tot, stats)  # put the list of the stats for this character in a list for the summary at the end
+    printstyled("Stats completed!\n"; color= :magenta)
+end
+printstyled("CHARACTER STATS GENERATOR\n"; color= :magenta)
+println("*" ^ 25)
 method()
+println(stats_tot, names)
