@@ -58,20 +58,22 @@ function four_dsix_drop()  # 4d6 drop the lowest
     end
     push!(stats_tot, stats)  # put the list of the stats for this character in a list for the summary at the end
 end
+
+
 printstyled("CHARACTER STATS GENERATOR\n"; color= :magenta)
 println("*" ^ 25)
 method()  # show the method menu
 printstyled("Stats are generated! Your character is ready!"; color= :magenta)
 
-# ask for repeat or not
-choice = 2
-while choice == 2
-    printstyled("Would you like to see a summary of the stats or roll for a new character?"; color= :magenta)
-    printstyled("If you choose to roll for a new character, information won't be lost,")
-    printstyled("a summary of all stats will be shown at the end")
+while true  # ask for repeat or not
+    printstyled("Would you like to see a summary of the stats or roll for a new character?\n"; color= :magenta)
+    printstyled("If you choose to roll for a new character, information won't be lost,\n")
+    printstyled("a summary of all stats will be shown at the end.")
     options = ["See all stats","Roll new character"]
     menu = RadioMenu(options; charset=:ascii)
-    choice = request("METHOD MENU:", menu)
-    choice == 1 ? break : method()
+    choiceRep = request("", menu)
+    choiceRep == 1 ? break : method()
 end
+
+
 println(stats_tot, names)
