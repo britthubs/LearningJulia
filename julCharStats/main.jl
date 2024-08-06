@@ -75,5 +75,11 @@ while true  # ask for repeat or not
     choiceRep == 1 ? break : method()
 end
 
-
-println(stats_tot, names)
+printstyled("These are your characters and their stats: \n")
+printstyled("*" ^ 42; color= :magenta)
+for i in range(1, stop=length(names))
+    for s in UnitRange(1,6)
+    stats = stats_tot
+    end
+end
+println(names, stats_tot)
